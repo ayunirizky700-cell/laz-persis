@@ -40,11 +40,13 @@ class Program extends Model
     public static function generateKode()
     {
         $tahun = date('Y');
-        $last = self::whereYear('created_at', $tahun)->latest()->first();
+        $prefix = 'PRG-' . $tahun . '-';
+        $last = self::where('kode_program', 'like', $prefix . '%')
+            ->orderBy('kode_program', 'desc')
+            ->first();
         $num = $last ? (int) substr($last->kode_program, -4) + 1 : 1;
-        return 'PRG-' . $tahun . '-' . str_pad($num, 4, '0', STR_PAD_LEFT);
+        return $prefix . str_pad($num, 4, '0', STR_PAD_LEFT);
     }
-
     public function penerimaan()
     {
         return $this->hasMany(Penerimaan::class);
