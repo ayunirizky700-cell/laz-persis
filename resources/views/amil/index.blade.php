@@ -2,11 +2,11 @@
     <x-slot name="header">
         <div class="flex justify-between items-center">
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                {{ __('Data Mustahik') }}
+                {{ __('Data Amil') }}
             </h2>
-            <a href="{{ route('mustahik.create') }}"
+            <a href="{{ route('amil.create') }}"
                class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                + Tambah Mustahik
+                + Tambah Amil
             </a>
         </div>
     </x-slot>
@@ -26,37 +26,39 @@
                         <thead class="bg-gray-50">
                             <tr>
                                 <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">No</th>
-                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Kode</th>
-                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Nama</th>
-                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Telepon</th>
-                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Asnaf</th>
-                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Verifikasi</th>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">NIP</th>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Nama User</th>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Jabatan</th>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Divisi</th>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Cabang</th>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
                                 <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Aksi</th>
                             </tr>
                         </thead>
                         <tbody class="bg-white divide-y divide-gray-200">
-                            @forelse ($mustahik as $index => $m)
+                            @forelse ($amil as $index => $a)
                                 <tr>
-                                    <td class="px-4 py-2">{{ $mustahik->firstItem() + $index }}</td>
-                                    <td class="px-4 py-2 font-mono text-sm">{{ $m->kode }}</td>
-                                    <td class="px-4 py-2">{{ $m->nama }}</td>
-                                    <td class="px-4 py-2">{{ $m->no_telepon }}</td>
-                                    <td class="px-4 py-2">{{ $m->kategori_asnaf }}</td>
+                                    <td class="px-4 py-2">{{ $amil->firstItem() + $index }}</td>
+                                    <td class="px-4 py-2 font-mono text-sm">{{ $a->nip_amil ?? '-' }}</td>
+                                    <td class="px-4 py-2">{{ $a->user->nama ?? '-' }}</td>
+                                    <td class="px-4 py-2">{{ $a->jabatan }}</td>
+                                    <td class="px-4 py-2">{{ $a->divisi ?? '-' }}</td>
+                                    <td class="px-4 py-2">{{ $a->cabang ?? '-' }}</td>
                                     <td class="px-4 py-2">
                                         <span class="px-2 py-1 text-xs rounded
-                                            @if($m->status_verifikasi == 'terverifikasi') bg-green-100 text-green-700
-                                            @elseif($m->status_verifikasi == 'pending') bg-yellow-100 text-yellow-700
+                                            @if($a->status == 'aktif') bg-green-100 text-green-700
+                                            @elseif($a->status == 'cuti') bg-yellow-100 text-yellow-700
                                             @else bg-red-100 text-red-700
                                             @endif">
-                                            {{ $m->status_verifikasi }}
+                                            {{ $a->status }}
                                         </span>
                                     </td>
                                     <td class="px-4 py-2">
-                                        <a href="{{ route('mustahik.show', $m->id) }}"
+                                        <a href="{{ route('amil.show', $a->id) }}"
                                            class="text-blue-600 hover:text-blue-900 mr-2">Lihat</a>
-                                        <a href="{{ route('mustahik.edit', $m->id) }}"
+                                        <a href="{{ route('amil.edit', $a->id) }}"
                                            class="text-yellow-600 hover:text-yellow-900 mr-2">Edit</a>
-                                        <form action="{{ route('mustahik.destroy', $m->id) }}"
+                                        <form action="{{ route('amil.destroy', $a->id) }}"
                                               method="POST" class="inline"
                                               onsubmit="return confirm('Yakin hapus data ini?')">
                                             @csrf
@@ -67,8 +69,8 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="7" class="px-4 py-6 text-center text-gray-500">
-                                        Belum ada data mustahik.
+                                    <td colspan="8" class="px-4 py-6 text-center text-gray-500">
+                                        Belum ada data amil.
                                     </td>
                                 </tr>
                             @endforelse
@@ -76,7 +78,7 @@
                     </table>
 
                     <div class="mt-4">
-                        {{ $mustahik->links() }}
+                        {{ $amil->links() }}
                     </div>
                 </div>
             </div>

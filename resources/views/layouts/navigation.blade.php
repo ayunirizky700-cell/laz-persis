@@ -27,6 +27,9 @@
     <x-nav-link :href="route('program.index')" :active="request()->routeIs('program.*')">
         {{ __('Program') }}
     </x-nav-link>
+        <x-nav-link :href="route('amil.index')" :active="request()->routeIs('amil.*')">
+        {{ __('Amil') }}
+    </x-nav-link>
 </div>
             </div>
 

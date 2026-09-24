@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Edit Muzakki') }} - {{ $muzakki->kode }}
+            {{ __('Tambah Amil') }}
         </h2>
     </x-slot>
 
@@ -20,48 +20,54 @@
                         </div>
                     @endif
 
-                    <form action="{{ route('muzakki.update', $muzakki->id) }}" method="POST">
+                    <form action="{{ route('amil.store') }}" method="POST">
                         @csrf
-                        @method('PUT')
 
                         <div class="mb-4">
                             <label class="block text-sm font-medium text-gray-700 mb-1">
-                                Nama <span class="text-red-500">*</span>
+                                User <span class="text-red-500">*</span>
                             </label>
-                            <input type="text" name="nama" value="{{ old('nama', $muzakki->nama) }}" required
+                            <select name="user_id" required
                                 class="w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200">
-                        </div>
-
-                        <div class="mb-4">
-                            <label class="block text-sm font-medium text-gray-700 mb-1">
-                                No. Telepon
-                            </label>
-                            <input type="text" name="no_telepon" value="{{ old('no_telepon', $muzakki->no_telepon) }}"
-                                class="w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200">
-                        </div>
-
-                        <div class="mb-4">
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
-                            <input type="email" name="email" value="{{ old('email', $muzakki->email) }}"
-                                class="w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200">
-                        </div>
-
-                        <div class="mb-4">
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Alamat</label>
-                            <textarea name="alamat" rows="3"
-                                class="w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200">{{ old('alamat', $muzakki->alamat) }}</textarea>
-                        </div>
-
-                        <div class="mb-4">
-                            <label class="block text-sm font-medium text-gray-700 mb-1">
-                                Kategori <span class="text-red-500">*</span>
-                            </label>
-                            <select name="kategori" required
-                                class="w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200">
-                                <option value="individu" {{ old('kategori', $muzakki->kategori) == 'individu' ? 'selected' : '' }}>Individu</option>
-                                <option value="perusahaan" {{ old('kategori', $muzakki->kategori) == 'perusahaan' ? 'selected' : '' }}>Perusahaan</option>
-                                <option value="lembaga" {{ old('kategori', $muzakki->kategori) == 'lembaga' ? 'selected' : '' }}>Lembaga</option>
+                                <option value="">-- Pilih User --</option>
+                                @foreach($users as $user)
+                                    <option value="{{ $user->id }}" {{ old('user_id') == $user->id ? 'selected' : '' }}>
+                                        {{ $user->nama ?? $user->name }} ({{ $user->email }})
+                                    </option>
+                                @endforeach
                             </select>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">NIP Amil</label>
+                            <input type="text" name="nip_amil" value="{{ old('nip_amil') }}"
+                                class="w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200">
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">
+                                Jabatan <span class="text-red-500">*</span>
+                            </label>
+                            <input type="text" name="jabatan" value="{{ old('jabatan') }}" required
+                                class="w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200">
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Divisi</label>
+                            <input type="text" name="divisi" value="{{ old('divisi') }}"
+                                class="w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200">
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Cabang</label>
+                            <input type="text" name="cabang" value="{{ old('cabang') }}"
+                                class="w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200">
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Tanggal Masuk</label>
+                            <input type="date" name="tanggal_masuk" value="{{ old('tanggal_masuk') }}"
+                                class="w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200">
                         </div>
 
                         <div class="mb-6">
@@ -70,19 +76,20 @@
                             </label>
                             <select name="status" required
                                 class="w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200">
-                                <option value="aktif" {{ old('status', $muzakki->status) == 'aktif' ? 'selected' : '' }}>Aktif</option>
-                                <option value="nonaktif" {{ old('status', $muzakki->status) == 'nonaktif' ? 'selected' : '' }}>Nonaktif</option>
+                                <option value="aktif" {{ old('status') == 'aktif' ? 'selected' : '' }}>Aktif</option>
+                                <option value="nonaktif" {{ old('status') == 'nonaktif' ? 'selected' : '' }}>Nonaktif</option>
+                                <option value="cuti" {{ old('status') == 'cuti' ? 'selected' : '' }}>Cuti</option>
                             </select>
                         </div>
 
                         <div class="flex items-center justify-end gap-2">
-                            <a href="{{ route('muzakki.index') }}"
+                            <a href="{{ route('amil.index') }}"
                                class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded">
                                 Batal
                             </a>
                             <button type="submit"
                                 class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                                Update
+                                Simpan
                             </button>
                         </div>
                     </form>
