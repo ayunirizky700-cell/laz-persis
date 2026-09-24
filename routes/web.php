@@ -10,9 +10,6 @@ use App\Http\Controllers\MuzakkiController;
 use App\Http\Controllers\MustahikController;
 use App\Http\Controllers\AmilController;
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\MuzakkiController;
-use App\Http\Controllers\MustahikController;
-use App\Http\Controllers\AmilController;
 
 Route::get('/', fn() => redirect('/login'));
 
@@ -25,10 +22,6 @@ Route::middleware('auth')->group(function () {
 
     // Modul Program
     Route::resource('program', ProgramController::class);
-    // Modul Master Data
-Route::resource('muzakki', \App\Http\Controllers\MuzakkiController::class);
-Route::resource('mustahik', \App\Http\Controllers\MustahikController::class);
-Route::resource('amil', \App\Http\Controllers\AmilController::class);
 
     // Modul Master Data
     Route::resource('muzakki', MuzakkiController::class);
