@@ -5,6 +5,7 @@ use App\Http\Controllers\ProgramController;
 use App\Http\Controllers\PenerimaanController;
 use App\Http\Controllers\PenyaluranController;
 use App\Http\Controllers\PersetujuanController;
+use App\Http\Controllers\LaporanController;
 use App\Http\Controllers\ProfileController;
 
 Route::get('/', fn() => redirect('/login'));
@@ -36,6 +37,19 @@ Route::middleware('auth')->group(function () {
     Route::get('persetujuan/{persetujuan}', [PersetujuanController::class, 'show'])->name('persetujuan.show');
     Route::post('persetujuan/{persetujuan}/approve', [PersetujuanController::class, 'approve'])->name('persetujuan.approve');
     Route::post('persetujuan/{persetujuan}/reject', [PersetujuanController::class, 'reject'])->name('persetujuan.reject');
+
+    // Modul Laporan
+    Route::get('laporan', [LaporanController::class, 'index'])->name('laporan.index');
+    Route::get('laporan/penerimaan', [LaporanController::class, 'penerimaan'])->name('laporan.penerimaan');
+    Route::get('laporan/penyaluran', [LaporanController::class, 'penyaluran'])->name('laporan.penyaluran');
+    Route::get('laporan/program', [LaporanController::class, 'program'])->name('laporan.program');
+    Route::get('laporan/rekap-saldo', [LaporanController::class, 'rekapSaldo'])->name('laporan.rekap-saldo');
+
+    // Export PDF Laporan
+    Route::get('laporan/penerimaan/pdf', [LaporanController::class, 'penerimaanPdf'])->name('laporan.penerimaan.pdf');
+    Route::get('laporan/penyaluran/pdf', [LaporanController::class, 'penyaluranPdf'])->name('laporan.penyaluran.pdf');
+    Route::get('laporan/program/pdf', [LaporanController::class, 'programPdf'])->name('laporan.program.pdf');
+    Route::get('laporan/rekap-saldo/pdf', [LaporanController::class, 'rekapSaldoPdf'])->name('laporan.rekap-saldo.pdf');
 });
 
 require __DIR__ . '/auth.php';
