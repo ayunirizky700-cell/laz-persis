@@ -41,6 +41,7 @@
                     <th class="p-3 text-left">Kategori</th>
                     <th class="p-3 text-left">Target</th>
                     <th class="p-3 text-left">Terkumpul</th>
+                    <th class="p-3 text-left">Tersalurkan</th>
                     <th class="p-3 text-left">Status</th>
                     <th class="p-3 text-left">Aksi</th>
                 </tr>
@@ -53,6 +54,7 @@
                         <td class="p-3">{{ ucfirst($p->kategori) }}</td>
                         <td class="p-3">Rp {{ number_format($p->target_dana, 0, ',', '.') }}</td>
                         <td class="p-3">Rp {{ number_format($p->dana_terkumpul, 0, ',', '.') }}</td>
+                        <td class="p-3">Rp {{ number_format($p->dana_tersalurkan, 0, ',', '.') }}</td>
                         <td class="p-3">
                             <span class="bg-green-100 px-2 py-1 text-xs rounded">{{ ucfirst($p->status) }}</span>
                         </td>
