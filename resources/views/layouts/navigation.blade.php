@@ -12,10 +12,22 @@
 
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                        {{ __('Dashboard') }}
-                    </x-nav-link>
-                </div>
+    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
+        {{ __('Dashboard') }}
+    </x-nav-link>
+
+   <x-nav-link :href="route('muzakki.index')" :active="request()->routeIs('muzakki.*')">
+    {{ __('Muzakki') }} 
+</x-nav-link>
+
+    <x-nav-link :href="route('mustahik.index')" :active="request()->routeIs('mustahik.*')">
+        {{ __('Mustahik') }}
+    </x-nav-link>
+
+    <x-nav-link :href="route('program.index')" :active="request()->routeIs('program.*')">
+        {{ __('Program') }}
+    </x-nav-link>
+</div>
             </div>
 
             <!-- Settings Dropdown -->

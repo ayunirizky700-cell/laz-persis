@@ -19,6 +19,9 @@ Route::middleware('auth')->group(function () {
 
     // Modul Program
     Route::resource('program', ProgramController::class);
+    // Modul Master Data
+Route::resource('muzakki', \App\Http\Controllers\MuzakkiController::class);
+Route::resource('mustahik', \App\Http\Controllers\MustahikController::class);
 
     // Modul Penerimaan
     Route::resource('penerimaan', PenerimaanController::class);
