@@ -1,12 +1,15 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Models\Muzakki;
+use App\Models\Mustahik;
+use App\Models\Program;
+use App\Models\Penerimaan;
+use App\Models\Penyaluran;
 use App\Models\User;
-use App\Models\Role;
-use Illuminate\Http\Request;
+use App\Models\Amil;             
 
-class DashboardController extends Controller
+  class DashboardController extends Controller
 {
     public function index()
     {
