@@ -25,6 +25,9 @@
                         <x-nav-link :href="route('mustahik.index')" :active="request()->routeIs('mustahik.*')">
                             {{ __('Mustahik') }}
                         </x-nav-link>
+                        <x-nav-link :href="route('amil.index')" :active="request()->routeIs('amil.*')">
+                            {{ __('Amil') }}
+                        </x-nav-link>
 
                         <x-nav-link :href="route('amil.index')" :active="request()->routeIs('amil.*')">
                             {{ __('Amil') }}
