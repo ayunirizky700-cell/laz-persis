@@ -5,7 +5,7 @@
                 {{ __('Detail Mustahik') }} - {{ $mustahik->kode }}
             </h2>
             <a href="{{ route('mustahik.index') }}"
-               class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded">
+                class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded">
                 ← Kembali
             </a>
         </div>
@@ -42,54 +42,37 @@
                             <dd class="capitalize">{{ $mustahik->kategori_asnaf }}</dd>
                         </div>
 
-                        <div class="py-3 flex justify-between">
-                            <dt class="font-medium text-gray-600">Status Verifikasi</dt>
-                            <dd>
-                                <span class="px-2 py-1 text-xs rounded
-                                    @if($mustahik->status_verifikasi == 'terverifikasi') bg-green-100 text-green-700
-                                    @elseif($mustahik->status_verifikasi == 'pending') bg-yellow-100 text-yellow-700
-                                    @else bg-red-100 text-red-700
-                                    @endif">
-                                    {{ $mustahik->status_verifikasi ?? 'pending' }}
-                                </span>
-                            </dd>
+                        {{-- Blok Verifikasi --}}
+                        @if($mustahik->status_verifikasi === 'pending')
+                            <div class="mt-6 pt-6 border-t">
+                                <p class="font-semibold text-gray-800 mb-3">Verifikasi Mustahik:</p>
+                                <div class="flex gap-2">
+                                    <form action="{{ route('mustahik.verifikasi', $mustahik) }}" method="POST"
+                                        class="inline">
+                                        @csrf
+                                        <input type="hidden" name="status_verifikasi" value="terverifikasi">
+                                        <button
+                                            class="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg font-semibold">
+                                            ✓ Verifikasi
+                                        </button>
+                                    </form>
+                                    <form action="{{ route('mustahik.verifikasi', $mustahik) }}" method="POST"
+                                        class="inline">
+                                        @csrf
+                                        <input type="hidden" name="status_verifikasi" value="ditolak">
+                                        <button
+                                            class="bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded-lg font-semibold">
+                                            ✗ Tolak
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        @endif
+
+                        {{-- Tombol Kembali --}}
+                        <div class="mt-6">
+                            <a href="{{ route('mustahik.index') }}" class="bg-gray-300 px-4 py-2 rounded">Kembali</a>
                         </div>
-
-                        <div class="py-3 flex justify-between">
-                            <dt class="font-medium text-gray-600">Status</dt>
-                            <dd>
-                                <span class="px-2 py-1 text-xs rounded
-                                    {{ $mustahik->status == 'aktif' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700' }}">
-                                    {{ $mustahik->status }}
-                                </span>
-                            </dd>
-                        </div>
-
-                        <div class="py-3 flex justify-between">
-                            <dt class="font-medium text-gray-600">Total Bantuan Diterima</dt>
-                            <dd class="font-semibold text-blue-600">
-                                Rp {{ number_format($totalBantuan ?? 0, 0, ',', '.') }}
-                            </dd>
-                        </div>
-
-                        <div class="py-3 flex justify-between">
-                            <dt class="font-medium text-gray-600">Dibuat</dt>
-                            <dd>{{ $mustahik->created_at->format('d M Y H:i') }}</dd>
-                        </div>
-
-                    </dl>
-
-                    <div class="mt-6 flex gap-2">
-                        <a href="{{ route('mustahik.edit', $mustahik->id) }}"
-                           class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded">
-                            Edit
-                        </a>
-                        <a href="{{ route('mustahik.index') }}"
-                           class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded">
-                            Kembali ke Daftar
-                        </a>
-                    </div>
-
                 </div>
             </div>
         </div>
