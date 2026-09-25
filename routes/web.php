@@ -6,15 +6,16 @@ use App\Http\Controllers\PenerimaanController;
 use App\Http\Controllers\PenyaluranController;
 use App\Http\Controllers\PersetujuanController;
 use App\Http\Controllers\LaporanController;
-use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\MuzakkiController;
 use App\Http\Controllers\MustahikController;
 use App\Http\Controllers\AmilController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ProfileController;
 
 Route::get('/', fn() => redirect('/login'));
 
 Route::middleware('auth')->group(function () {
-    Route::get('/dashboard', fn() => view('dashboard'))->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -22,10 +23,13 @@ Route::middleware('auth')->group(function () {
 
     // Modul Program
     Route::resource('program', ProgramController::class);
+
     // Modul Master Data
-Route::resource('muzakki', \App\Http\Controllers\MuzakkiController::class);
-Route::resource('mustahik', \App\Http\Controllers\MustahikController::class);
-Route::resource('amil', \App\Http\Controllers\AmilController::class);
+    Route::resource('muzakki', MuzakkiController::class);
+    Route::resource('mustahik', MustahikController::class);
+    Route::post('mustahik/{mustahik}/verifikasi', [MustahikController::class, 'verifikasi'])
+        ->name('mustahik.verifikasi');
+    Route::resource('amil', AmilController::class);
 
     // Modul Penerimaan
     Route::resource('penerimaan', PenerimaanController::class);
@@ -52,7 +56,7 @@ Route::resource('amil', \App\Http\Controllers\AmilController::class);
     Route::get('laporan/program', [LaporanController::class, 'program'])->name('laporan.program');
     Route::get('laporan/rekap-saldo', [LaporanController::class, 'rekapSaldo'])->name('laporan.rekap-saldo');
 
-    // Export PDF Laporan
+    // Export PDF
     Route::get('laporan/penerimaan/pdf', [LaporanController::class, 'penerimaanPdf'])->name('laporan.penerimaan.pdf');
     Route::get('laporan/penyaluran/pdf', [LaporanController::class, 'penyaluranPdf'])->name('laporan.penyaluran.pdf');
     Route::get('laporan/program/pdf', [LaporanController::class, 'programPdf'])->name('laporan.program.pdf');
