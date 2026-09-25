@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Edit Mustahik') }} - {{ $mustahik->kode }}
+            {{ __('Edit Amil') }} - {{ $amil->nip_amil ?? 'NIP belum diisi' }}
         </h2>
     </x-slot>
 
@@ -20,48 +20,55 @@
                         </div>
                     @endif
 
-                    <form action="{{ route('mustahik.update', $mustahik->id) }}" method="POST">
+                    <form action="{{ route('amil.update', $amil->id) }}" method="POST">
                         @csrf
                         @method('PUT')
 
                         <div class="mb-4">
                             <label class="block text-sm font-medium text-gray-700 mb-1">
-                                Nama <span class="text-red-500">*</span>
+                                User <span class="text-red-500">*</span>
                             </label>
-                            <input type="text" name="nama" value="{{ old('nama', $mustahik->nama) }}" required
+                            <select name="user_id" required
                                 class="w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200">
-                        </div>
-
-                        <div class="mb-4">
-                            <label class="block text-sm font-medium text-gray-700 mb-1">
-                                Alamat <span class="text-red-500">*</span>
-                            </label>
-                            <textarea name="alamat" rows="3" required
-                                class="w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200">{{ old('alamat', $mustahik->alamat) }}</textarea>
-                        </div>
-
-                        <div class="mb-4">
-                            <label class="block text-sm font-medium text-gray-700 mb-1">No. Telepon</label>
-                            <input type="text" name="no_telepon" value="{{ old('no_telepon', $mustahik->no_telepon) }}"
-                                class="w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200">
-                        </div>
-
-                        <div class="mb-4">
-                            <label class="block text-sm font-medium text-gray-700 mb-1">
-                                Kategori Asnaf <span class="text-red-500">*</span>
-                            </label>
-                            <select name="kategori_asnaf" required
-                                class="w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200">
-                                <option value="">-- Pilih Asnaf --</option>
-                                <option value="fakir" {{ old('kategori_asnaf', $mustahik->kategori_asnaf) == 'fakir' ? 'selected' : '' }}>Fakir</option>
-                                <option value="miskin" {{ old('kategori_asnaf', $mustahik->kategori_asnaf) == 'miskin' ? 'selected' : '' }}>Miskin</option>
-                                <option value="amil" {{ old('kategori_asnaf', $mustahik->kategori_asnaf) == 'amil' ? 'selected' : '' }}>Amil</option>
-                                <option value="muallaf" {{ old('kategori_asnaf', $mustahik->kategori_asnaf) == 'muallaf' ? 'selected' : '' }}>Muallaf</option>
-                                <option value="riqab" {{ old('kategori_asnaf', $mustahik->kategori_asnaf) == 'riqab' ? 'selected' : '' }}>Riqab</option>
-                                <option value="gharim" {{ old('kategori_asnaf', $mustahik->kategori_asnaf) == 'gharim' ? 'selected' : '' }}>Gharim</option>
-                                <option value="fisabilillah" {{ old('kategori_asnaf', $mustahik->kategori_asnaf) == 'fisabilillah' ? 'selected' : '' }}>Fisabilillah</option>
-                                <option value="ibnu_sabil" {{ old('kategori_asnaf', $mustahik->kategori_asnaf) == 'ibnu_sabil' ? 'selected' : '' }}>Ibnu Sabil</option>
+                                <option value="">-- Pilih User --</option>
+                                @foreach($users as $user)
+                                    <option value="{{ $user->id }}" {{ old('user_id', $amil->user_id) == $user->id ? 'selected' : '' }}>
+                                        {{ $user->nama ?? $user->name }} ({{ $user->email }})
+                                    </option>
+                                @endforeach
                             </select>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">NIP Amil</label>
+                            <input type="text" name="nip_amil" value="{{ old('nip_amil', $amil->nip_amil) }}"
+                                class="w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200">
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">
+                                Jabatan <span class="text-red-500">*</span>
+                            </label>
+                            <input type="text" name="jabatan" value="{{ old('jabatan', $amil->jabatan) }}" required
+                                class="w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200">
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Divisi</label>
+                            <input type="text" name="divisi" value="{{ old('divisi', $amil->divisi) }}"
+                                class="w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200">
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Cabang</label>
+                            <input type="text" name="cabang" value="{{ old('cabang', $amil->cabang) }}"
+                                class="w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200">
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Tanggal Masuk</label>
+                            <input type="date" name="tanggal_masuk" value="{{ old('tanggal_masuk', $amil->tanggal_masuk ? $amil->tanggal_masuk->format('Y-m-d') : '') }}"
+                                class="w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200">
                         </div>
 
                         <div class="mb-6">
@@ -70,13 +77,14 @@
                             </label>
                             <select name="status" required
                                 class="w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200">
-                                <option value="aktif" {{ old('status', $mustahik->status) == 'aktif' ? 'selected' : '' }}>Aktif</option>
-                                <option value="nonaktif" {{ old('status', $mustahik->status) == 'nonaktif' ? 'selected' : '' }}>Nonaktif</option>
+                                <option value="aktif" {{ old('status', $amil->status) == 'aktif' ? 'selected' : '' }}>Aktif</option>
+                                <option value="nonaktif" {{ old('status', $amil->status) == 'nonaktif' ? 'selected' : '' }}>Nonaktif</option>
+                                <option value="cuti" {{ old('status', $amil->status) == 'cuti' ? 'selected' : '' }}>Cuti</option>
                             </select>
                         </div>
 
                         <div class="flex items-center justify-end gap-2">
-                            <a href="{{ route('mustahik.index') }}"
+                            <a href="{{ route('amil.index') }}"
                                class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded">
                                 Batal
                             </a>

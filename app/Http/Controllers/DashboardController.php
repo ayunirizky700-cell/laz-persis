@@ -28,6 +28,20 @@ class DashboardController extends Controller
         // Data user terbaru
         $recentUsers = User::with('role')->latest()->take(5)->get();
 
+        // Variabel untuk dashboard versi terbaru
+        $totalSuperAdmin = User::whereHas('role', function($q) {
+            $q->where('nama_role', 'super_admin');
+        })->count();
+
+        $totalPimpinan = User::whereHas('role', function($q) {
+            $q->where('nama_role', 'pimpinan');
+        })->count();
+
+        $totalAmil = Amil::count();
+
+        // Variabel tambahan yang diminta view
+        $recentUsers = User::with('role')->latest()->take(5)->get();
+
         return view('dashboard', compact(
             'totalUsers',
             'totalSuperAdmin',
