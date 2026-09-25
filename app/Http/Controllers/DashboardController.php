@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use App\Models\Muzakki;
@@ -7,6 +8,7 @@ use App\Models\Program;
 use App\Models\Penerimaan;
 use App\Models\Penyaluran;
 use App\Models\User;
+use App\Models\Amil;
 
 class DashboardController extends Controller
 {
@@ -21,6 +23,20 @@ class DashboardController extends Controller
         $saldo = $totalPenerimaan - $totalPenyaluran;
         $pendingPersetujuan = Penyaluran::where('status', 'diajukan')->count();
 
+        // Variabel untuk dashboard versi terbaru
+        $totalSuperAdmin = User::whereHas('role', function($q) {
+            $q->where('nama_role', 'super_admin');
+        })->count();
+
+        $totalPimpinan = User::whereHas('role', function($q) {
+            $q->where('nama_role', 'pimpinan');
+        })->count();
+
+        $totalAmil = Amil::count();
+
+        // Variabel tambahan yang diminta view
+        $recentUsers = User::with('role')->latest()->take(5)->get();
+
         return view('dashboard', compact(
             'totalUsers',
             'totalMuzakki',
@@ -29,7 +45,11 @@ class DashboardController extends Controller
             'totalPenerimaan',
             'totalPenyaluran',
             'saldo',
-            'pendingPersetujuan'
+            'pendingPersetujuan',
+            'totalSuperAdmin',
+            'totalPimpinan',
+            'totalAmil',
+            'recentUsers'
         ));
     }
 }

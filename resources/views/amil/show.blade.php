@@ -2,9 +2,9 @@
     <x-slot name="header">
         <div class="flex justify-between items-center">
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                {{ __('Detail Muzakki') }} - {{ $muzakki->kode }}
+                {{ __('Detail Amil') }}
             </h2>
-            <a href="{{ route('muzakki.index') }}"
+            <a href="{{ route('amil.index') }}"
                class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded">
                 ← Kembali
             </a>
@@ -18,58 +18,61 @@
                     <dl class="divide-y divide-gray-200">
 
                         <div class="py-3 flex justify-between">
-                            <dt class="font-medium text-gray-600">Kode</dt>
-                            <dd class="font-mono">{{ $muzakki->kode }}</dd>
+                            <dt class="font-medium text-gray-600">NIP Amil</dt>
+                            <dd class="font-mono">{{ $amil->nip_amil ?? '-' }}</dd>
                         </div>
 
                         <div class="py-3 flex justify-between">
-                            <dt class="font-medium text-gray-600">Nama</dt>
-                            <dd>{{ $muzakki->nama }}</dd>
+                            <dt class="font-medium text-gray-600">Nama User</dt>
+                            <dd>{{ $amil->user->nama ?? $amil->user->name ?? '-' }}</dd>
                         </div>
 
                         <div class="py-3 flex justify-between">
-                            <dt class="font-medium text-gray-600">No. Telepon</dt>
-                            <dd>{{ $muzakki->no_telepon ?? '-' }}</dd>
+                            <dt class="font-medium text-gray-600">Jabatan</dt>
+                            <dd>{{ $amil->jabatan }}</dd>
                         </div>
 
                         <div class="py-3 flex justify-between">
-                            <dt class="font-medium text-gray-600">Email</dt>
-                            <dd>{{ $muzakki->email ?? '-' }}</dd>
+                            <dt class="font-medium text-gray-600">Divisi</dt>
+                            <dd>{{ $amil->divisi ?? '-' }}</dd>
                         </div>
 
                         <div class="py-3 flex justify-between">
-                            <dt class="font-medium text-gray-600">Alamat</dt>
-                            <dd>{{ $muzakki->alamat ?? '-' }}</dd>
+                            <dt class="font-medium text-gray-600">Cabang</dt>
+                            <dd>{{ $amil->cabang ?? '-' }}</dd>
                         </div>
 
                         <div class="py-3 flex justify-between">
-                            <dt class="font-medium text-gray-600">Kategori</dt>
-                            <dd class="capitalize">{{ $muzakki->kategori }}</dd>
+                            <dt class="font-medium text-gray-600">Tanggal Masuk</dt>
+                            <dd>{{ $amil->tanggal_masuk ? $amil->tanggal_masuk->format('d M Y') : '-' }}</dd>
                         </div>
 
                         <div class="py-3 flex justify-between">
                             <dt class="font-medium text-gray-600">Status</dt>
                             <dd>
                                 <span class="px-2 py-1 text-xs rounded
-                                    {{ $muzakki->status == 'aktif' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700' }}">
-                                    {{ $muzakki->status }}
+                                    @if($amil->status == 'aktif') bg-green-100 text-green-700
+                                    @elseif($amil->status == 'cuti') bg-yellow-100 text-yellow-700
+                                    @else bg-red-100 text-red-700
+                                    @endif">
+                                    {{ $amil->status }}
                                 </span>
                             </dd>
                         </div>
 
                         <div class="py-3 flex justify-between">
                             <dt class="font-medium text-gray-600">Dibuat</dt>
-                            <dd>{{ $muzakki->created_at->format('d M Y H:i') }}</dd>
+                            <dd>{{ $amil->created_at->format('d M Y H:i') }}</dd>
                         </div>
 
                     </dl>
 
                     <div class="mt-6 flex gap-2">
-                        <a href="{{ route('muzakki.edit', $muzakki->id) }}"
+                        <a href="{{ route('amil.edit', $amil->id) }}"
                            class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded">
                             Edit
                         </a>
-                        <a href="{{ route('muzakki.index') }}"
+                        <a href="{{ route('amil.index') }}"
                            class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded">
                             Kembali ke Daftar
                         </a>

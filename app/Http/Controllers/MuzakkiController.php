@@ -31,8 +31,9 @@ class MuzakkiController extends Controller {
             'kategori' => 'required|in:individu,perusahaan,lembaga',
             'status' => 'required|in:aktif,nonaktif',
         ]);
+        $validated['created_by'] = auth()->id();
         $muzakki = Muzakki::create($validated);
-        ActivityLog::catat('create', 'muzakki', 'Tambah muzakki: '.$muzakki->nama);
+        // ActivityLog::catat('create', 'muzakki', 'Tambah muzakki: '.$muzakki->nama);
         return redirect()->route('muzakki.index')->with('success', 'Muzakki ditambahkan. Kode: '.$muzakki->kode);
     }
 
