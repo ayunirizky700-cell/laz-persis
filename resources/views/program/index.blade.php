@@ -18,11 +18,11 @@
         @endif
 
         <div class="flex justify-between mb-4">
-            <form method="GET" class="flex gap-2">
+            <form method="GET" class="flex gap-2 relative z-50">
                 <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari program..."
                     class="border rounded px-3 py-2">
-                <select name="status" class="border rounded px-3 py-2">
-                    <option value="">Semua Status</option>
+               <select name="status" class="border rounded px-3 py-2 relative z-50">
+                    <option value=""> Semua Status </option>
                     @foreach(['draft', 'aktif', 'selesai', 'ditutup'] as $s)
                         <option value="{{ $s }}" @selected(request('status') == $s)>{{ ucfirst($s) }}</option>
                     @endforeach
