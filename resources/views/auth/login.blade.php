@@ -177,6 +177,14 @@
                         LOG IN
                     </button>
                 </form>
+                {{-- Link Register --}}
+                <p class="mt-6 text-center text-sm text-gray-600">
+                    Belum punya akun?
+                    <a href="{{ route('register') }}" class="text-blue-600 hover:text-blue-800 font-semibold underline">
+                        Daftar di sini
+                    </a>
+                </p>
+
 
                 <p class="mt-8 text-center text-sm text-gray-500">
                     © {{ date('Y') }} LAZ PERSIS
