@@ -1,203 +1,169 @@
 <x-app-layout>
-    <!-- Slot Header (Bawaan Laravel) -->
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Dashboard LAZ PERSIS') }}
-        </h2>
-    </x-slot>
 
-    <!-- Memanggil ikon FontAwesome dari CDN -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
+    {{-- Tambahan CSS Khusus Dashboard agar dijamin rapi --}}
     <style>
-        /* ================= RESET & DASAR ================= */
-        .dashboard-container {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            color: #333;
-        }
-
-        /* ================= BANNER SELAMAT DATANG ================= */
-        .welcome-banner {
-            background: linear-gradient(135deg, #4b6cb7 0%, #182848 100%);
-            color: #ffffff;
-            padding: 30px;
-            border-radius: 12px;
-            margin-bottom: 25px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-        }
-
-        .welcome-banner h1 {
-            font-size: 26px;
-            margin-bottom: 15px;
-            font-weight: 600;
-        }
-
-        .welcome-banner p {
-            font-size: 15px;
-            margin-bottom: 8px;
-            opacity: 0.9;
-        }
-
-        .badge-active {
-            background-color: #28a745;
-            color: white;
-            padding: 3px 8px;
-            border-radius: 4px;
-            font-size: 12px;
-            font-weight: bold;
-            text-transform: uppercase;
-        }
-
-        /* ================= GRID KARTU STATISTIK ================= */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-        }
-
-        .stat-card {
-            background-color: #ffffff;
-            border-radius: 12px;
-            padding: 25px;
+        /* Mengatur Grid Layout */
+        .dashboard-row {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            flex-wrap: wrap;
+            margin-right: -15px;
+            margin-left: -15px;
+            margin-bottom: 20px;
         }
 
-        .stat-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+        .dashboard-col-4 {
+            flex: 0 0 33.333333%;
+            max-width: 33.333333%;
+            padding-right: 15px;
+            padding-left: 15px;
+            box-sizing: border-box;
         }
 
-        .stat-title {
-            font-size: 13px;
+        .dashboard-col-3 {
+            flex: 0 0 25%;
+            max-width: 25%;
+            padding-right: 15px;
+            padding-left: 15px;
+            box-sizing: border-box;
+        }
+
+        /* Mengatur Kartu */
+        .card-custom {
+            background: #fff;
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            padding: 20px;
+            transition: transform 0.3s ease;
+            height: 100%;
+        }
+
+        .card-custom:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Teks dan Warna */
+        .text-label {
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-transform: uppercase;
             color: #6c757d;
-            font-weight: 600;
-            letter-spacing: 0.5px;
-            margin-bottom: 8px;
+            margin-bottom: 5px;
         }
 
-        .stat-number {
-            font-size: 28px;
-            font-weight: bold;
-        }
-
-        /* ================= WARNA IKON & ANGKA ================= */
-        .icon-blue {
-            background-color: #e6f0ff;
-            color: #0d6efd;
-        }
-
-        .text-blue {
-            color: #0d6efd;
-        }
-
-        .icon-red {
-            background-color: #ffe6e6;
-            color: #dc3545;
-        }
-
-        .text-red {
-            color: #dc3545;
-        }
-
-        .icon-yellow {
-            background-color: #fff8e1;
-            color: #ffc107;
-        }
-
-        .text-yellow {
-            color: #ffc107;
-        }
-
-        .icon-green {
-            background-color: #e8f5e9;
-            color: #198754;
+        .text-value {
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin-bottom: 0;
         }
 
         .text-green {
             color: #198754;
         }
 
-        /* Bentuk Lingkaran Ikon */
-        .stat-icon {
-            width: 55px;
-            height: 55px;
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 22px;
+        .text-red {
+            color: #dc3545;
+        }
+
+        .text-blue {
+            color: #0d6efd;
+        }
+
+        .text-orange {
+            color: #fd7e14;
+        }
+
+        /* Responsif untuk layar kecil (HP) */
+        @media (max-width: 768px) {
+
+            .dashboard-col-4,
+            .dashboard-col-3 {
+                flex: 0 0 100%;
+                max-width: 100%;
+                margin-bottom: 15px;
+            }
         }
     </style>
 
-    <!-- Konten Utama Dashboard -->
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="dashboard-container">
+    <div class="container-fluid">
 
-                <!-- Banner Selamat Datang -->
-                <div class="welcome-banner">
-                    <h3>Selamat Datang, {{ Auth::user()->nama ?? Auth::user()->name }}! 👋</h3>
-                    Anda login sebagai {{ Auth::user()->role->nama_role ?? 'User' }}
-                    <p class="status">Status akun: <span class="badge-active">aktif</span></p>
+        <!-- 1. Banner Sambutan -->
+        <div class="card-custom mb-4"
+            style="background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); color: white; border-radius: 15px;">
+            <h3 class="fw-bold mb-2">Selamat Datang, Super Admin LAZ! 👋</h3>
+            <p class="mb-0" style="opacity: 0.9;">
+                Anda login sebagai <strong>super_admin</strong> | Status:
+                <span style="background: #198754; padding: 3px 8px; border-radius: 5px; font-size: 0.8rem;">AKTIF</span>
+            </p>
+        </div>
 
-                    <!-- Waktu Bergabung (Menggunakan Teks Manual/Statis) -->
-                    <p><i class="fa-regular fa-calendar-check"></i> Waktu Bergabung: 24 September 2026</p>
-
-                </div>
-
-                <!-- Grid Kartu Statistik -->
-                <div class="stats-grid">
-
-                    <!-- Kartu 1: Total Pengguna -->
-                    <div class="stat-card">
-                        <div class="stat-info">
-                            <p class="stat-title">TOTAL PENGGUNA</p>
-                            <h3 class="stat-number text-blue">3</h3>
-                        </div>
-                        <div class="stat-icon icon-blue">
-                            <i class="fa-solid fa-users"></i>
-                        </div>
-                    </div>
-
-                    <!-- Kartu 2: Super Admin -->
-                    <div class="stat-card">
-                        <div class="stat-info">
-                            <p class="stat-title">SUPER ADMIN</p>
-                            <h3 class="stat-number text-red">1</h3>
-                        </div>
-                        <div class="stat-icon icon-red">
-                            <i class="fa-solid fa-shield-halved"></i>
-                        </div>
-                    </div>
-
-                    <!-- Kartu 3: Pimpinan -->
-                    <div class="stat-card">
-                        <div class="stat-info">
-                            <p class="stat-title">PIMPINAN</p>
-                            <h3 class="stat-number text-yellow">1</h3>
-                        </div>
-                        <div class="stat-icon icon-yellow">
-                            <i class="fa-solid fa-user-tie"></i>
-                        </div>
-                    </div>
-
-                    <!-- Kartu 4: Amil -->
-                    <div class="stat-card">
-                        <div class="stat-info">
-                            <p class="stat-title">AMIL</p>
-                            <h3 class="stat-number text-green">1</h3>
-                        </div>
-                        <div class="stat-icon icon-green">
-                            <i class="fa-solid fa-briefcase"></i>
-                        </div>
-                    </div>
-
+        <!-- 2. Kartu Keuangan (Paling Utama) -->
+        <div class="dashboard-row">
+            <!-- Penerimaan (Semua Role Boleh Lihat) -->
+            <div class="dashboard-col-4">
+                <div class="card-custom" style="border-left: 5px solid #198754;">
+                    <div class="text-label">Total Penerimaan</div>
+                    <div class="text-value text-green">Rp {{ number_format($totalPenerimaan, 0, ',', '.') }}</div>
                 </div>
             </div>
+
+            <!-- Penyaluran (Semua Role Boleh Lihat) -->
+            <div class="dashboard-col-4">
+                <div class="card-custom" style="border-left: 5px solid #dc3545;">
+                    <div class="text-label">Total Penyaluran</div>
+                    <div class="text-value text-red">Rp {{ number_format($totalPenyaluran, 0, ',', '.') }}</div>
+                </div>
+            </div>
+
+            <!-- Saldo Akhir: HANYA Super Admin (1) dan Pimpinan (3) yang boleh lihat -->
+            @if($role_id == 1 || $role_id == 3)
+                <div class="dashboard-col-4">
+                    <div class="card-custom" style="border-left: 5px solid #0d6efd;">
+                        <div class="text-label">Saldo Akhir</div>
+                        <div class="text-value text-blue">Rp {{ number_format($saldo, 0, ',', '.') }}</div>
+                    </div>
+                </div>
+            @endif
         </div>
+
+        <!-- 3. Statistik Pengguna: HANYA Super Admin (1) yang boleh lihat -->
+        @if($role_id == 1)
+            <h5 class="fw-bold mb-3 mt-4">Statistik Pengguna</h5>
+            <div class="dashboard-row">
+                <!-- Total Pengguna -->
+                <div class="dashboard-col-3">
+                    <div class="card-custom text-center">
+                        <div class="text-value" style="color: #333;">{{ $totalPengguna }}</div>
+                        <div class="text-label mt-2">Total Pengguna</div>
+                    </div>
+                </div>
+
+                <!-- Super Admin -->
+                <div class="dashboard-col-3">
+                    <div class="card-custom text-center">
+                        <div class="text-value text-red">{{ $totalSuperAdmin }}</div>
+                        <div class="text-label mt-2">Super Admin</div>
+                    </div>
+                </div>
+
+                <!-- Pimpinan -->
+                <div class="dashboard-col-3">
+                    <div class="card-custom text-center">
+                        <div class="text-value text-orange">{{ $totalPimpinan }}</div>
+                        <div class="text-label mt-2">Pimpinan</div>
+                    </div>
+                </div>
+
+                <!-- Amil -->
+                <div class="dashboard-col-3">
+                    <div class="card-custom text-center">
+                        <div class="text-value text-green">{{ $totalAmil }}</div>
+                        <div class="text-label mt-2">Amil</div>
+                    </div>
+                </div>
+            </div>
+        @endif
+
     </div>
 </x-app-layout>

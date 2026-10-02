@@ -87,31 +87,20 @@ class LaporanController extends Controller
 
     // ============ EXPORT PDF ============
 
-    public function penerimaanPdf(Request $request)
+     // Pastikan ini di-import di bagian atas
+
+    public function penerimaanPdf()
     {
-        $query = Penerimaan::with(['muzakki', 'program'])->where('status', 'valid');
+        // 1. Ambil data dari database
+        $penerimaans = Penerimaan::orderBy('tanggal', 'desc')->get();
+        $totalPenerimaan = Penerimaan::sum('nominal');
 
-        if ($request->filled('tanggal_mulai')) {
-            $query->whereDate('tanggal', '>=', $request->tanggal_mulai);
-        }
-        if ($request->filled('tanggal_selesai')) {
-            $query->whereDate('tanggal', '<=', $request->tanggal_selesai);
-        }
+        // 2. Load view dan kirim data
+        $pdf = Pdf::loadView('laporan.pdf.pdf_penerimaan', compact('penerimaans', 'totalPenerimaan'));
 
-        $data = $query->orderBy('tanggal', 'desc')->get();
-        $total = $data->sum('nominal');
-        $tanggalCetak = now()->format('d/m/Y H:i');
-
-        $pdf = Pdf::loadView('laporan.pdf.penerimaan', compact(
-            'data',
-            'total',
-            'tanggalCetak',
-            'request'
-        ));
-
-        return $pdf->download('laporan-penerimaan-' . date('Y-m-d') . '.pdf');
+        // 3. Download PDF
+        return $pdf->download('Laporan-Penerimaan-' . date('Y-m-d') . '.pdf');
     }
-
     public function penyaluranPdf(Request $request)
     {
         $query = Penyaluran::with(['program', 'mustahik'])

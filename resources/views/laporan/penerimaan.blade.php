@@ -41,7 +41,7 @@
                     <tr class="border-t">
                         <td class="p-3">{{ $i + 1 }}</td>
                         <td class="p-3">{{ $p->nomor_transaksi }}</td>
-                        <td class="p-3">{{ $p->tanggal->format('d/m/Y') }}</td>
+                        <td class="p-3">{{ \Carbon\Carbon::parse($p->tanggal)->format('d/m/Y') }}</td>
                         <td class="p-3">{{ $p->muzakki->nama ?? $p->nama_donatur ?? 'Anonim' }}</td>
                         <td class="p-3">{{ ucfirst($p->jenis_dana) }}</td>
                         <td class="p-3">Rp {{ number_format($p->nominal, 0, ',', '.') }}</td>

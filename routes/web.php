@@ -14,7 +14,16 @@ use App\Http\Controllers\ProfileController;
 
 Route::get('/', fn() => redirect('/login'));
 
+// Rute utama: Cek apakah sudah login atau belum
+Route::get('/', function () {
+    if (auth()->check()) {
+        return redirect()->route('dashboard'); // Kalau sudah login, ke Dashboard
+    }
+    return redirect()->route('login'); // Kalau belum login, ke Login
+});
+
 Route::middleware('auth')->group(function () {
+    // Rute Dashboard (yang sempat hilang)
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -62,5 +71,6 @@ Route::middleware('auth')->group(function () {
     Route::get('laporan/program/pdf', [LaporanController::class, 'programPdf'])->name('laporan.program.pdf');
     Route::get('laporan/rekap-saldo/pdf', [LaporanController::class, 'rekapSaldoPdf'])->name('laporan.rekap-saldo.pdf');
 });
+
 
 require __DIR__ . '/auth.php';

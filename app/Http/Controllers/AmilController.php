@@ -1,23 +1,28 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use App\Models\Amil;
 use App\Models\User;
 use Illuminate\Http\Request;
 
-class AmilController extends Controller {
+class AmilController extends Controller
+{
 
-    public function index() {
+    public function index()
+    {
         $amil = Amil::with('user')->paginate(10);
         return view('amil.index', compact('amil'));
     }
 
-    public function create() {
+    public function create()
+    {
         $users = User::orderBy('nama')->get();
         return view('amil.create', compact('users'));
     }
 
-    public function store(Request $request) {
+    public function store(Request $request)
+    {
         $validated = $request->validate([
             'user_id' => 'required|exists:users,id|unique:amil,user_id',
             'nip_amil' => 'nullable|string|max:30|unique:amil,nip_amil',
@@ -31,20 +36,23 @@ class AmilController extends Controller {
         return redirect()->route('amil.index')->with('success', 'Amil ditambahkan.');
     }
 
-    public function show(Amil $amil) {
+    public function show(Amil $amil)
+    {
         $amil->load('user');
         return view('amil.show', compact('amil'));
     }
 
-    public function edit(Amil $amil) {
+    public function edit(Amil $amil)
+    {
         $users = User::orderBy('nama')->get();
         return view('amil.edit', compact('amil', 'users'));
     }
 
-    public function update(Request $request, Amil $amil) {
+    public function update(Request $request, Amil $amil)
+    {
         $validated = $request->validate([
-            'user_id' => 'required|exists:users,id|unique:amil,user_id,'.$amil->id,
-            'nip_amil' => 'nullable|string|max:30|unique:amil,nip_amil,'.$amil->id,
+            'user_id' => 'required|exists:users,id|unique:amil,user_id,' . $amil->id,
+            'nip_amil' => 'nullable|string|max:30|unique:amil,nip_amil,' . $amil->id,
             'jabatan' => 'required|string|max:50',
             'divisi' => 'nullable|string|max:50',
             'cabang' => 'nullable|string|max:50',
@@ -55,7 +63,14 @@ class AmilController extends Controller {
         return redirect()->route('amil.index')->with('success', 'Amil diupdate.');
     }
 
-    public function destroy(Amil $amil) {
+    public function destroy(Amil $amil)
+    {
+        // PERBAIKAN: Cek apakah amil sudah punya riwayat transaksi
+        // Jika belum ada relasi di Model Amil, baris ini bisa di-comment dulu
+        if ($amil->penerimaan()->count() > 0 || $amil->penyaluran()->count() > 0) {
+            return back()->with('error', 'Tidak bisa hapus, Amil ini memiliki riwayat transaksi.');
+        }
+
         $amil->delete();
         return redirect()->route('amil.index')->with('success', 'Amil dihapus.');
     }

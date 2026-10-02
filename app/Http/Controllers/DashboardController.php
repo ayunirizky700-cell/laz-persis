@@ -1,56 +1,38 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\Models\Muzakki;
-use App\Models\Mustahik;
-use App\Models\Program;
+
+use App\Models\User;
 use App\Models\Penerimaan;
 use App\Models\Penyaluran;
-use App\Models\User;
-use App\Models\Amil;             
 
-  class DashboardController extends Controller
+class DashboardController extends Controller
 {
     public function index()
     {
-        // Hitung total user per role
-        $totalUsers = User::count();
+        // 1. Data Keuangan
+        $totalPenerimaan = Penerimaan::sum('nominal') ?? 0;
+        $totalPenyaluran = Penyaluran::sum('nominal') ?? 0;
+        $saldo = $totalPenerimaan - $totalPenyaluran;
 
-        $totalSuperAdmin = User::whereHas('role', function ($q) {
-            $q->where('nama_role', 'super_admin');
-        })->count();
+        // 2. Data User
+        $totalPengguna = User::count();
+        $totalSuperAdmin = User::where('role_id', 1)->count();
+        $totalAmil = User::where('role_id', 2)->count();
+        $totalPimpinan = User::where('role_id', 3)->count();
 
-        $totalPimpinan = User::whereHas('role', function ($q) {
-            $q->where('nama_role', 'pimpinan');
-        })->count();
-
-        $totalAmil = User::whereHas('role', function ($q) {
-            $q->where('nama_role', 'admin_amil');
-        })->count();
-
-        // Data user terbaru
-        $recentUsers = User::with('role')->latest()->take(5)->get();
-
-        // Variabel untuk dashboard versi terbaru
-        $totalSuperAdmin = User::whereHas('role', function($q) {
-            $q->where('nama_role', 'super_admin');
-        })->count();
-
-        $totalPimpinan = User::whereHas('role', function($q) {
-            $q->where('nama_role', 'pimpinan');
-        })->count();
-
-        $totalAmil = Amil::count();
-
-        // Variabel tambahan yang diminta view
-        $recentUsers = User::with('role')->latest()->take(5)->get();
+        // 3. Ambil Role User yang sedang login
+        $role_id = auth()->user()->role_id;
 
         return view('dashboard', compact(
-            'totalUsers',
+            'totalPenerimaan',
+            'totalPenyaluran',
+            'saldo',
+            'totalPengguna',
             'totalSuperAdmin',
             'totalPimpinan',
             'totalAmil',
-            'recentUsers'
+            'role_id'
         ));
     }
 }
