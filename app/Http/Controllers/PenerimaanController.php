@@ -26,7 +26,7 @@ class PenerimaanController extends Controller
         if ($request->filled('jenis_dana'))
             $query->where('jenis_dana', $request->jenis_dana);
 
-        $penerimaan = $query->latest()->paginate(10);
+        $penerimaan = $query->latest()->paginate(5);
         $total = Penerimaan::where('status', 'valid')->sum('nominal');
 
         return view('penerimaan.index', compact('penerimaan', 'total'));
