@@ -70,6 +70,8 @@ Route::middleware('auth')->group(function () {
     Route::get('laporan/penyaluran/pdf', [LaporanController::class, 'penyaluranPdf'])->name('laporan.penyaluran.pdf');
     Route::get('laporan/program/pdf', [LaporanController::class, 'programPdf'])->name('laporan.program.pdf');
     Route::get('laporan/rekap-saldo/pdf', [LaporanController::class, 'rekapSaldoPdf'])->name('laporan.rekap-saldo.pdf');
+    Route::get('laporan/muzakki/pdf', [LaporanController::class, 'muzakkiPdf'])->name('laporan.muzakki.pdf');
+    Route::get('laporan/mustahik/pdf', [LaporanController::class, 'mustahikPdf'])->name('laporan.mustahik.pdf');
 });
 
 
