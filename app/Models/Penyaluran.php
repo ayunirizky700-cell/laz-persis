@@ -52,11 +52,12 @@ class Penyaluran extends Model
 
     public function program()
     {
-        return $this->belongsTo(Program::class);
+        return $this->belongsTo(Program::class, 'program_id');
     }
+
     public function mustahik()
     {
-        return $this->belongsTo(Mustahik::class);
+        return $this->belongsTo(Mustahik::class, 'mustahik_id');
     }
     public function persetujuan()
     {

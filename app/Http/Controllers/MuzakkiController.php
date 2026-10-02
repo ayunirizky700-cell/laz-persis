@@ -24,7 +24,7 @@ class MuzakkiController extends Controller
             $query->where('kategori', $request->kategori);
         }
 
-        $muzakki = $query->latest()->paginate(10);
+        $muzakki = $query->latest()->paginate(5);
 
         // Agar filter tetap terbawa saat pindah halaman pagination
         return view('muzakki.index', compact('muzakki'));

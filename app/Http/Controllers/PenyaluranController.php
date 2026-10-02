@@ -23,7 +23,7 @@ class PenyaluranController extends Controller
         if ($request->filled('status'))
             $query->where('status', $request->status);
 
-        $penyaluran = $query->latest()->paginate(10);
+        $penyaluran = $query->latest()->paginate(5);
         return view('penyaluran.index', compact('penyaluran'));
     }
 

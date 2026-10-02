@@ -49,11 +49,11 @@
                         <td class="p-3">Rp {{ number_format($p->nominal, 0, ',', '.') }}</td>
                         <td class="p-3">
                             <span class="px-2 py-1 text-xs rounded
-                                {{ $p->status == 'draft' ? 'bg-gray-100' : '' }}
-                                {{ $p->status == 'diajukan' ? 'bg-yellow-100' : '' }}
-                                {{ $p->status == 'disetujui' ? 'bg-blue-100' : '' }}
-                                {{ $p->status == 'ditolak' ? 'bg-red-100' : '' }}
-                                {{ $p->status == 'direalisasi' ? 'bg-green-100' : '' }}">
+                                    {{ $p->status == 'draft' ? 'bg-gray-100' : '' }}
+                                    {{ $p->status == 'diajukan' ? 'bg-yellow-100' : '' }}
+                                    {{ $p->status == 'disetujui' ? 'bg-blue-100' : '' }}
+                                    {{ $p->status == 'ditolak' ? 'bg-red-100' : '' }}
+                                    {{ $p->status == 'direalisasi' ? 'bg-green-100' : '' }}">
                                 {{ ucfirst($p->status) }}
                             </span>
                         </td>

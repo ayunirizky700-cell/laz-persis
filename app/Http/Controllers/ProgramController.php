@@ -17,7 +17,7 @@ class ProgramController extends Controller
         if ($request->filled('status'))
             $query->where('status', $request->status);
 
-        $program = $query->latest()->paginate(10);
+        $program = $query->latest()->paginate(5);
         return view('program.index', compact('program'));
     }
 

@@ -14,7 +14,7 @@ class MustahikController extends Controller {
         }
         if ($request->filled('kategori_asnaf')) $query->where('kategori_asnaf', $request->kategori_asnaf);
         if ($request->filled('status_verifikasi')) $query->where('status_verifikasi', $request->status_verifikasi);
-        $mustahik = $query->latest()->paginate(10);
+        $mustahik = $query->latest()->paginate(5);
         return view('mustahik.index', compact('mustahik'));
     }
 

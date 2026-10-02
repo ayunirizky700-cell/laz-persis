@@ -9,23 +9,14 @@ use Illuminate\Http\Request;
 class PersetujuanController extends Controller
 {
 
-    public function index(Request $request)
+    public function index()
     {
-        $query = Persetujuan::with(['penyaluran.program', 'penyaluran.mustahik', 'approver'])
-            ->where('referensi_tipe', 'penyaluran');
+        $persetujuan = \App\Models\Penyaluran::with(['program', 'mustahik'])
+            ->latest()
+            ->paginate(5);
 
-        // Pimpinan hanya lihat yang ditugaskan ke dia
-        if (auth()->user()->isPimpinan()) {
-            $query->where('approver_id', auth()->id());
-        }
-
-        if ($request->filled('status'))
-            $query->where('status', $request->status);
-
-        $persetujuan = $query->latest()->paginate(10);
         return view('persetujuan.index', compact('persetujuan'));
     }
-
     public function show(Persetujuan $persetujuan)
     {
         $persetujuan->load(['penyaluran.program', 'penyaluran.mustahik', 'approver']);
