@@ -51,19 +51,21 @@
                         <td class="p-3">-</td>
                         <td class="p-3">
                             <span class="px-2 py-1 text-xs rounded
-                                    {{ $p->status == 'valid' ? 'bg-green-100' : '' }}
-                                    {{ $p->status == 'pending' ? 'bg-yellow-100' : '' }}">
+                                        {{ $p->status == 'valid' ? 'bg-green-100' : '' }}
+                                        {{ $p->status == 'pending' ? 'bg-yellow-100' : '' }}">
                                 {{ ucfirst($p->status) }}
                             </span>
                         </td>
                         <td class="p-3 flex gap-2">
                             <a href="{{ route('penerimaan.show', $p) }}" class="text-blue-600">Lihat</a>
                             <a href="{{ route('penerimaan.edit', $p) }}" class="text-yellow-600">Edit</a>
-                            <form action="{{ route('penerimaan.destroy', $p) }}" method="POST" class="inline"
-                                onsubmit="return confirm('Yakin hapus?')">
-                                @csrf @method('DELETE')
-                                <button class="text-red-600">Hapus</button>
-                            </form>
+                            @if($p->status != 'valid')
+                                <form action="{{ route('penerimaan.destroy', $p) }}" method="POST" class="inline"
+                                    onsubmit="return confirm('Yakin hapus?')">
+                                    @csrf @method('DELETE')
+                                    <button class="text-red-600">Hapus</button>
+                                </form>
+                            @endif
                         </td>
                     </tr>
                 @empty
