@@ -112,6 +112,35 @@ class PenerimaanController extends Controller
         return back()->with('success', 'Status diupdate menjadi ' . $request->status);
     }
 
+    public function edit(Penerimaan $penerimaan)
+    {
+        $muzakki = \App\Models\Muzakki::orderBy('nama')->get();
+        $program = \App\Models\Program::where('status', 'aktif')->orderBy('nama_program')->get();
+        return view('penerimaan.edit', compact('penerimaan', 'muzakki', 'program'));
+    }
+
+    public function update(Request $request, Penerimaan $penerimaan)
+    {
+        $validated = $request->validate([
+            'tanggal' => 'required|date',
+            'muzakki_id' => 'nullable|exists:muzakki,id',
+            'nama_donatur' => 'nullable|string|max:100',
+            'program_id' => 'nullable|exists:program,id',
+            'jenis_dana' => 'required|in:zakat,infaq,sedekah,wakaf,dana_kemanusiaan,csr',
+            'nominal' => 'required|numeric|min:1000',
+            'metode_pembayaran' => 'required|in:tunai,transfer_bank,qris,e_wallet,lainnya',
+            'no_referensi' => 'nullable|string|max:50',
+            'keterangan' => 'nullable|string',
+            'status' => 'required|in:pending,valid,ditolak,dibatalkan',
+        ]);
+
+        $penerimaan->update($validated);
+
+        \App\Models\ActivityLog::catat('update', 'penerimaan', 'Update: ' . $penerimaan->nomor_transaksi, $penerimaan->id);
+
+        return redirect()->route('penerimaan.index')->with('success', 'Penerimaan diupdate.');
+    }
+
     public function destroy(Penerimaan $penerimaan)
     {
         if ($penerimaan->status === 'valid') {
@@ -125,4 +154,6 @@ class PenerimaanController extends Controller
 
         return redirect()->route('penerimaan.index')->with('success', 'Data dihapus.');
     }
+
+
 }

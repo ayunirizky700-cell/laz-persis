@@ -9,18 +9,35 @@ class Penerimaan extends Model
 {
     use HasFactory;
 
-    // TAMBAHKAN BARIS INI
     protected $table = 'penerimaan';
-
     protected $guarded = [];
 
-    public function program()
-    {
-        return $this->belongsTo(Program::class, 'program_id');
-    }
+    protected $casts = [
+        'tanggal' => 'date',
+        'nominal' => 'decimal:2',
+    ];
 
+    // Relasi ke Muzakki
     public function muzakki()
     {
-        return $this->belongsTo(Muzakki::class, 'muzakki_id');
+        return $this->belongsTo(\App\Models\Muzakki::class, 'muzakki_id');
+    }
+
+    // Relasi ke Program
+    public function program()
+    {
+        return $this->belongsTo(\App\Models\Program::class, 'program_id');
+    }
+
+    // TAMBAHKAN INI: Relasi ke validator (User yang validasi)
+    public function validator()
+    {
+        return $this->belongsTo(\App\Models\User::class, 'validated_by');
+    }
+
+    // Relasi ke creator (User yang buat)
+    public function creator()
+    {
+        return $this->belongsTo(\App\Models\User::class, 'created_by');
     }
 }
