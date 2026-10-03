@@ -91,10 +91,12 @@
         <!-- 1. Banner Sambutan -->
         <div class="card-custom mb-4"
             style="background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); color: white; border-radius: 15px;">
-            <h3 class="fw-bold mb-2">Selamat Datang, Super Admin LAZ! 👋</h3>
+            <h3 class="fw-bold mb-2">Selamat Datang, {{ Auth::user()->nama ?? Auth::user()->name }}! 👋</h3>
             <p class="mb-0" style="opacity: 0.9;">
-                Anda login sebagai <strong>super_admin</strong> | Status:
+                Status Akun:
                 <span style="background: #198754; padding: 3px 8px; border-radius: 5px; font-size: 0.8rem;">AKTIF</span>
+                &nbsp;|&nbsp; Login sebagai:
+                <strong>{{ Auth::user()->role_id == 1 ? 'Super Admin' : (Auth::user()->role_id == 2 ? 'Amil' : 'Pimpinan') }}</strong>
             </p>
         </div>
 

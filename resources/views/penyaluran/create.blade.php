@@ -30,7 +30,7 @@
                     <option value="">-- Pilih Mustahik --</option>
                     @foreach($mustahik as $m)
                         <option value="{{ $m->id }}" @selected(old('mustahik_id') == $m->id)>
-                            {{ $m->nama }} ({{ ucfirst($m->kategori_asnaf) }})
+                            {{ $m->nama }} ({{ ucfirst($m->asnaf ?? '-') }})
                         </option>
                     @endforeach
                 </select>
@@ -65,7 +65,7 @@
             </div>
 
             <div class="flex gap-2 pt-4">
-                <button class="bg-blue-600 text-white px-4 py-2 rounded">Simpan sebagai Draft</button>
+                <button class="bg-blue-600 text-white px-4 py-2 rounded">Ajukan Penyaluran</button>
                 <a href="{{ route('penyaluran.index') }}" class="bg-gray-300 px-4 py-2 rounded">Batal</a>
             </div>
         </form>

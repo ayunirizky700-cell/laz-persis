@@ -33,7 +33,6 @@ class PenyaluranController extends Controller
         $mustahik = Mustahik::where('status_verifikasi', 'terverifikasi')->get();
         return view('penyaluran.create', compact('program', 'mustahik'));
     }
-
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -51,9 +50,28 @@ class PenyaluranController extends Controller
                 ->store('bukti-penyaluran', 'public');
         }
 
-        $validated['status'] = 'draft';
+        // 1. Generate nomor transaksi
+        $lastId = Penyaluran::max('id') + 1;
+        $validated['nomor_transaksi'] = 'TRX-OUT-' . date('Y') . '-' . str_pad($lastId, 4, '0', STR_PAD_LEFT);
+
+        // 2. Set status langsung 'diajukan' (skip draft)
+        $validated['status'] = 'diajukan';
+
+        // 3. Simpan
         $penyaluran = Penyaluran::create($validated);
 
+        // 4. Buat record Persetujuan untuk pimpinan
+        $pimpinan = User::where('role_id', 3)->get();
+        foreach ($pimpinan as $p) {
+            Persetujuan::create([
+                'referensi_tipe' => 'penyaluran',
+                'referensi_id' => $penyaluran->id,
+                'approver_id' => $p->id,
+                'status' => 'pending',
+            ]);
+        }
+
+        // 5. Catat aktivitas
         ActivityLog::catat(
             'create',
             'penyaluran',
@@ -62,7 +80,7 @@ class PenyaluranController extends Controller
         );
 
         return redirect()->route('penyaluran.index')
-            ->with('success', 'Penyaluran dibuat (draft). Ajukan ke pimpinan untuk disetujui.');
+            ->with('success', 'Pengajuan berhasil dikirim ke Pimpinan.');
     }
 
     public function show(Penyaluran $penyaluran)

@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use App\Models\Persetujuan;
@@ -8,82 +9,54 @@ use Illuminate\Http\Request;
 
 class PersetujuanController extends Controller
 {
-
     public function index()
     {
-        $persetujuan = \App\Models\Penyaluran::with(['program', 'mustahik'])
+        $persetujuan = Penyaluran::with(['program', 'mustahik'])
+            ->whereIn('status', ['diajukan', 'disetujui', 'ditolak'])
             ->latest()
-            ->paginate(5);
+            ->paginate(10);
 
         return view('persetujuan.index', compact('persetujuan'));
     }
-    public function show(Persetujuan $persetujuan)
+
+    public function show($id)
     {
-        $persetujuan->load(['penyaluran.program', 'penyaluran.mustahik', 'approver']);
+        $persetujuan = Penyaluran::with(['program', 'mustahik'])->findOrFail($id);
         return view('persetujuan.show', compact('persetujuan'));
     }
 
-    public function approve(Request $request, Persetujuan $persetujuan)
+    public function approve(Request $request, $id)
     {
-        if (!auth()->user()->isPimpinan() && !auth()->user()->isSuperAdmin()) {
-            abort(403, 'Hanya Pimpinan yang bisa approve.');
-        }
+        $penyaluran = Penyaluran::findOrFail($id);
+        $penyaluran->update(['status' => 'disetujui']);
 
-        $request->validate(['catatan' => 'nullable|string']);
+        // Update record persetujuan juga (kalau ada)
+        Persetujuan::where('referensi_tipe', 'penyaluran')
+            ->where('referensi_id', $penyaluran->id)
+            ->update([
+                'status' => 'disetujui',
+                'approved_at' => now(),
+            ]);
 
-        $persetujuan->update([
-            'status' => 'disetujui',
-            'catatan' => $request->catatan,
-            'approved_at' => now(),
-        ]);
+        ActivityLog::catat('approve', 'penyaluran', 'Setujui: ' . $penyaluran->nomor_transaksi, $penyaluran->id);
 
-        // Update status penyaluran
-        $penyaluran = Penyaluran::find($persetujuan->referensi_id);
-        if ($penyaluran && $penyaluran->status === 'diajukan') {
-            $penyaluran->update(['status' => 'disetujui']);
-        }
-
-        ActivityLog::catat(
-            'approve',
-            'persetujuan',
-            'Setujui penyaluran: ' . ($penyaluran->nomor_transaksi ?? ''),
-            $persetujuan->id
-        );
-
-        return redirect()->route('persetujuan.index')
-            ->with('success', 'Pengajuan disetujui.');
+        return redirect()->route('persetujuan.index')->with('success', 'Pengajuan disetujui.');
     }
 
-    public function reject(Request $request, Persetujuan $persetujuan)
+    public function reject(Request $request, $id)
     {
-        if (!auth()->user()->isPimpinan() && !auth()->user()->isSuperAdmin()) {
-            abort(403, 'Hanya Pimpinan yang bisa reject.');
-        }
+        $penyaluran = Penyaluran::findOrFail($id);
+        $penyaluran->update(['status' => 'ditolak']);
 
-        $request->validate(['catatan' => 'required|string']);
-
-        $persetujuan->update([
-            'status' => 'ditolak',
-            'catatan' => $request->catatan,
-            'approved_at' => now(),
-        ]);
-
-        $penyaluran = Penyaluran::find($persetujuan->referensi_id);
-        if ($penyaluran) {
-            $penyaluran->update([
+        Persetujuan::where('referensi_tipe', 'penyaluran')
+            ->where('referensi_id', $penyaluran->id)
+            ->update([
                 'status' => 'ditolak',
-                'keterangan' => $request->catatan,
+                'approved_at' => now(),
             ]);
-        }
 
-        ActivityLog::catat(
-            'reject',
-            'persetujuan',
-            'Tolak penyaluran: ' . ($penyaluran->nomor_transaksi ?? ''),
-            $persetujuan->id
-        );
+        ActivityLog::catat('reject', 'penyaluran', 'Tolak: ' . $penyaluran->nomor_transaksi, $penyaluran->id);
 
-        return redirect()->route('persetujuan.index')
-            ->with('success', 'Pengajuan ditolak.');
+        return redirect()->route('persetujuan.index')->with('success', 'Pengajuan ditolak.');
     }
 }

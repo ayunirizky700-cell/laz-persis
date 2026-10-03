@@ -51,12 +51,12 @@ Route::middleware('auth')->group(function () {
         ->name('penyaluran.ajukan');
     Route::post('penyaluran/{penyaluran}/realisasi', [PenyaluranController::class, 'realisasi'])
         ->name('penyaluran.realisasi');
-
+        
     // Modul Persetujuan
     Route::get('persetujuan', [PersetujuanController::class, 'index'])->name('persetujuan.index');
-    Route::get('persetujuan/{persetujuan}', [PersetujuanController::class, 'show'])->name('persetujuan.show');
-    Route::post('persetujuan/{persetujuan}/approve', [PersetujuanController::class, 'approve'])->name('persetujuan.approve');
-    Route::post('persetujuan/{persetujuan}/reject', [PersetujuanController::class, 'reject'])->name('persetujuan.reject');
+    Route::get('persetujuan/{id}', [PersetujuanController::class, 'show'])->name('persetujuan.show');
+    Route::post('persetujuan/{id}/approve', [PersetujuanController::class, 'approve'])->name('persetujuan.approve');
+    Route::post('persetujuan/{id}/reject', [PersetujuanController::class, 'reject'])->name('persetujuan.reject');
 
     // Modul Laporan
     Route::get('laporan', [LaporanController::class, 'index'])->name('laporan.index');
