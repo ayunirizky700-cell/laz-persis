@@ -20,6 +20,7 @@ class MuzakkiController extends Controller
             });
         }
 
+
         if ($request->filled('kategori')) {
             $query->where('kategori', $request->kategori);
         }
@@ -28,7 +29,13 @@ class MuzakkiController extends Controller
 
         // Agar filter tetap terbawa saat pindah halaman pagination
         return view('muzakki.index', compact('muzakki'));
+        
     }
+    public function create()
+    {
+        return view('muzakki.create'); // Ganti dengan nama view form Anda
+    }
+
     public function store(Request $request)
     {
         $validated = $request->validate([
