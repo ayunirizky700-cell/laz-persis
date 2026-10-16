@@ -11,58 +11,76 @@
             <div class="bg-red-100 text-red-700 p-3 rounded mb-4">{{ session('error') }}</div>
         @endif
 
-        <div class="flex justify-between mb-4">
-            <form method="GET" class="flex gap-2">
-                <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari amil..."
-                    class="border rounded px-3 py-2">
-                <button class="bg-blue-600 text-white px-4 py-2 rounded">Filter</button>
-            </form>
-            <a href="{{ route('amil.create') }}" class="bg-green-600 text-white px-4 py-2 rounded">+ Tambah Amil</a>
-        </div>
+        <!-- TOOLBAR RESPONSIVE -->
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-4">
 
-        <table class="w-full bg-white shadow rounded">
-            <thead class="bg-gray-100">
-                <tr>
-                    <th class="p-3 text-left">NIP</th>
-                    <th class="p-3 text-left">Nama User</th>
-                    <th class="p-3 text-left">Jabatan</th>
-                    <th class="p-3 text-left">Divisi</th>
-                    <th class="p-3 text-left">Cabang</th>
-                    <th class="p-3 text-left">Status</th>
-                    <th class="p-3 text-left">Aksi</th>
-                </tr>
-            </thead>
-            <tbody>
-                @forelse($amil as $a)
-                    <tr class="border-t">
-                        <td class="p-3">{{ $a->nip_amil ?? '-' }}</td>
-                        <td class="p-3">{{ $a->user->nama ?? $a->user->name ?? '-' }}</td>
-                        <td class="p-3">{{ $a->jabatan }}</td>
-                        <td class="p-3">{{ $a->divisi ?? '-' }}</td>
-                        <td class="p-3">{{ $a->cabang ?? '-' }}</td>
-                        <td class="p-3">
-                            <span class="px-2 py-1 text-xs rounded
-                                    {{ $a->status == 'aktif' ? 'bg-green-100' : 'bg-gray-100' }}">
-                                {{ ucfirst($a->status) }}
-                            </span>
-                        </td>
-                        <td class="p-3 flex gap-2">
-                            <a href="{{ route('amil.show', $a) }}" class="text-blue-600">Lihat</a>
-                            <a href="{{ route('amil.edit', $a) }}" class="text-yellow-600">Edit</a>
-                            <form action="{{ route('amil.destroy', $a) }}" method="POST" class="inline"
-                                onsubmit="return confirm('Yakin hapus?')">
-                                @csrf @method('DELETE')
-                                <button class="text-red-600">Hapus</button>
-                            </form>
-                        </td>
-                    </tr>
-                @empty
+            <!-- Form Pencarian -->
+            <form method="GET" class="flex flex-col md:flex-row gap-2 w-full md:w-auto">
+                <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari amil..."
+                    class="border rounded px-3 py-2 w-full md:w-56 flex-shrink-0">
+                <button
+                    class="bg-blue-600 text-white px-4 py-2 rounded w-full md:w-auto flex-shrink-0 whitespace-nowrap">Filter</button>
+            </form>
+
+            <!-- Tombol Tambah Amil -->
+            <a href="{{ route('amil.create') }}"
+                class="bg-green-600 text-white px-4 py-2 rounded text-center w-full md:w-auto md:inline-block whitespace-nowrap flex-shrink-0">
+                + Tambah Amil
+            </a>
+        </div>
+        <!-- SELESAI TOOLBAR -->
+
+        <!-- TABEL RESPONSIVE -->
+        <div class="overflow-x-auto w-full bg-white shadow rounded">
+            <table class="w-full whitespace-nowrap">
+                <thead class="bg-gray-100">
                     <tr>
-                        <td colspan="7" class="p-3 text-center text-gray-500">Belum ada amil.</td>
+                        <th class="p-3 text-left">NIP</th>
+                        <th class="p-3 text-left">Nama User</th>
+                        <th class="p-3 text-left">Jabatan</th>
+                        <th class="p-3 text-left">Divisi</th>
+                        <th class="p-3 text-left">Cabang</th>
+                        <th class="p-3 text-left">Status</th>
+                        <th class="p-3 text-left">Aksi</th>
                     </tr>
-                @endforelse
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    @forelse($amil as $a)
+                        <tr class="border-t">
+                            <td class="p-3">{{ $a->nip_amil ?? '-' }}</td>
+                            <td class="p-3">{{ $a->user->nama ?? $a->user->name ?? '-' }}</td>
+                            <td class="p-3">{{ $a->jabatan }}</td>
+                            <td class="p-3">{{ $a->divisi ?? '-' }}</td>
+                            <td class="p-3">{{ $a->cabang ?? '-' }}</td>
+                            <td class="p-3">
+                                <span class="px-2 py-1 text-xs rounded
+                                            {{ $a->status == 'aktif' ? 'bg-green-100' : 'bg-gray-100' }}">
+                                    {{ ucfirst($a->status) }}
+                                </span>
+                            </td>
+                            <td class="p-3">
+                                <!-- Aksi dibungkus div flex -->
+                                <div class="flex gap-2">
+                                    <a href="{{ route('amil.show', $a) }}" class="text-blue-600">Lihat</a>
+                                    <a href="{{ route('amil.edit', $a) }}" class="text-yellow-600">Edit</a>
+                                    <form action="{{ route('amil.destroy', $a) }}" method="POST" class="inline"
+                                        onsubmit="return confirm('Yakin hapus?')">
+                                        @csrf @method('DELETE')
+                                        <button class="text-red-600">Hapus</button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="7" class="p-3 text-center text-gray-500">Belum ada amil.</td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+        <!-- SELESAI TABEL -->
+
         <div class="mt-4">{{ $amil->links() }}</div>
     </div>
 </x-app-layout>
