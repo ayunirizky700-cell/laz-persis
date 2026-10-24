@@ -4,10 +4,6 @@
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
                 {{ __('Detail Muzakki') }} - {{ $muzakki->kode }}
             </h2>
-            <a href="{{ route('muzakki.index') }}"
-               class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded">
-                ← Kembali
-            </a>
         </div>
     </x-slot>
 
@@ -50,7 +46,8 @@
                         <div class="py-3 flex justify-between">
                             <dt class="font-medium text-gray-600">Status</dt>
                             <dd>
-                                <span class="px-2 py-1 text-xs rounded
+                                <span
+                                    class="px-2 py-1 text-xs rounded
                                     {{ $muzakki->status == 'aktif' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700' }}">
                                     {{ $muzakki->status }}
                                 </span>
@@ -66,11 +63,11 @@
 
                     <div class="mt-6 flex gap-2">
                         <a href="{{ route('muzakki.edit', $muzakki->id) }}"
-                           class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded">
+                            class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded">
                             Edit
                         </a>
                         <a href="{{ route('muzakki.index') }}"
-                           class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded">
+                            class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded">
                             Kembali ke Daftar
                         </a>
                     </div>

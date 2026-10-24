@@ -17,7 +17,8 @@ class PenerimaanController extends Controller
 
         if ($request->filled('search')) {
             $query->where(function ($q) use ($request) {
-                $q->where('nomor_transaksi', 'like', '%' . $request->search . '%')
+                // Sesuaikan 'nomor_transaksi' dengan nama kolom di database (kode_penerimaan)
+                $q->where('kode_penerimaan', 'like', '%' . $request->search . '%')
                     ->orWhere('nama_donatur', 'like', '%' . $request->search . '%');
             });
         }
@@ -41,45 +42,52 @@ class PenerimaanController extends Controller
 
     public function store(Request $request)
     {
+        // 1. Validasi Input (PERBAIKAN UTAMA DI SINI)
         $validated = $request->validate([
             'tanggal' => 'required|date',
+            // Ubah jadi nullable karena ada opsi donatur anonim
             'muzakki_id' => 'nullable|exists:muzakki,id',
-            'nama_donatur' => 'nullable|string|max:100',
+            'nama_donatur' => 'nullable|string|max:255',
             'program_id' => 'nullable|exists:program,id',
-            'jenis_dana' => 'required|in:zakat,infaq,sedekah,wakaf,dana_kemanusiaan,csr',
+            // GANTI 'jenis' MENJADI 'jenis_dana'
+            'jenis_dana' => 'required|string',
             'nominal' => 'required|numeric|min:1000',
-            'metode_pembayaran' => 'required|in:tunai,transfer_bank,qris,e_wallet,lainnya',
-            'no_referensi' => 'nullable|string|max:50',
-            'bukti_pembayaran' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
+            'metode_pembayaran' => 'required|string',
+            'no_referensi' => 'nullable|string',
             'keterangan' => 'nullable|string',
             'status' => 'required|in:pending,valid',
         ]);
 
-        if (empty($validated['muzakki_id']) && empty($validated['nama_donatur'])) {
-            return back()->withInput()
-                ->withErrors(['muzakki_id' => 'Pilih muzakki atau isi nama donatur anonim.']);
-        }
+        // 2. Otomatis isi created_by (ID user yang login)
+        $validated['created_by'] = auth()->id();
 
-        if ($request->hasFile('bukti_pembayaran')) {
-            $validated['bukti_pembayaran'] = $request->file('bukti_pembayaran')
-                ->store('bukti-penerimaan', 'public');
-        }
+        // 3. Otomatis buat kode_penerimaan
+        $tahun = date('Y');
+        $lastData = \App\Models\Penerimaan::whereYear('created_at', $tahun)->latest('id')->first();
+        $lastNumber = $lastData ? (int) substr($lastData->kode_penerimaan, -4) : 0;
+        $validated['kode_penerimaan'] = 'PNR-' . $tahun . '-' . str_pad($lastNumber + 1, 4, '0', STR_PAD_LEFT);
 
+        // 4. Logika Validasi (Jika statusnya langsung 'valid')
         if ($validated['status'] === 'valid') {
             $validated['validated_by'] = auth()->id();
             $validated['validated_at'] = now();
         }
 
-        $penerimaan = Penerimaan::create($validated);
-        ActivityLog::catat(
-            'create',
-            'penerimaan',
-            'Tambah penerimaan: ' . $penerimaan->nomor_transaksi,
-            $penerimaan->id
-        );
+        // 5. Simpan ke Database
+        $penerimaan = \App\Models\Penerimaan::create($validated);
 
-        return redirect()->route('penerimaan.index')
-            ->with('success', 'Penerimaan dicatat. No: ' . $penerimaan->nomor_transaksi);
+        // 6. Catat Activity Log
+        if (class_exists('\App\Models\ActivityLog')) {
+            \App\Models\ActivityLog::catat(
+                'create',
+                'penerimaan',
+                'Tambah penerimaan: ' . $penerimaan->kode_penerimaan,
+                $penerimaan->id
+            );
+        }
+
+        // 7. Redirect kembali ke halaman index
+        return redirect()->route('penerimaan.index')->with('success', 'Data Penerimaan berhasil disimpan!');
     }
 
     public function show(Penerimaan $penerimaan)
@@ -105,7 +113,7 @@ class PenerimaanController extends Controller
         ActivityLog::catat(
             'validasi',
             'penerimaan',
-            'Validasi: ' . $penerimaan->nomor_transaksi . ' → ' . $request->status,
+            'Validasi: ' . $penerimaan->kode_penerimaan . ' → ' . $request->status,
             $penerimaan->id
         );
 
@@ -136,7 +144,7 @@ class PenerimaanController extends Controller
 
         $penerimaan->update($validated);
 
-        \App\Models\ActivityLog::catat('update', 'penerimaan', 'Update: ' . $penerimaan->nomor_transaksi, $penerimaan->id);
+        \App\Models\ActivityLog::catat('update', 'penerimaan', 'Update: ' . $penerimaan->kode_penerimaan, $penerimaan->id);
 
         return redirect()->route('penerimaan.index')->with('success', 'Penerimaan diupdate.');
     }
@@ -154,6 +162,4 @@ class PenerimaanController extends Controller
 
         return redirect()->route('penerimaan.index')->with('success', 'Data dihapus.');
     }
-
-
 }

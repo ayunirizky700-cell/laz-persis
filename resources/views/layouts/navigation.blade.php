@@ -10,21 +10,35 @@
                     </a>
                 </div>
 
-                <!-- Navigation Links -->
+                <!-- Navigation Links (Desktop) -->
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                         {{ __('Dashboard') }}
                     </x-nav-link>
 
-                    {{-- Menu untuk SEMUA ROLE (Super Admin, Amil, Pimpinan) --}}
-                    @if(in_array(auth()->user()->role_id, [1, 2, 3]))
-                        <x-nav-link :href="route('muzakki.index')" :active="request()->routeIs('muzakki.*')">
-                            {{ __('Muzakki') }}
-                        </x-nav-link>
+                    @auth
+                        {{-- Menu untuk SEMUA ROLE (1=Super Admin, 2=Amil, 3=Pimpinan) --}}
+                        @if(in_array(auth()->user()->role_id, [1, 2, 3]))
+                            <x-nav-link :href="route('muzakki.index')" :active="request()->routeIs('muzakki.*')">
+                                {{ __('Muzakki') }}
+                            </x-nav-link>
 
-                        <x-nav-link :href="route('mustahik.index')" :active="request()->routeIs('mustahik.*')">
-                            {{ __('Mustahik') }}
-                        </x-nav-link>
+                            <x-nav-link :href="route('mustahik.index')" :active="request()->routeIs('mustahik.*')">
+                                {{ __('Mustahik') }}
+                            </x-nav-link>
+
+                            <x-nav-link :href="route('program.index')" :active="request()->routeIs('program.*')">
+                                {{ __('Program') }}
+                            </x-nav-link>
+
+                            <x-nav-link :href="route('penerimaan.index')" :active="request()->routeIs('penerimaan.*')">
+                                {{ __('Penerimaan') }}
+                            </x-nav-link>
+
+                            <x-nav-link :href="route('penyaluran.index')" :active="request()->routeIs('penyaluran.*')">
+                                {{ __('Penyaluran') }}
+                            </x-nav-link>
+                        @endif
 
                         {{-- Menu KHUSUS SUPER ADMIN (role_id = 1) --}}
                         @if(auth()->user()->role_id == 1)
@@ -33,29 +47,17 @@
                             </x-nav-link>
                         @endif
 
-                        <x-nav-link :href="route('program.index')" :active="request()->routeIs('program.*')">
-                            {{ __('Program') }}
-                        </x-nav-link>
+                        {{-- Menu KHUSUS SUPER ADMIN & PIMPINAN (1, 3) --}}
+                        @if(in_array(auth()->user()->role_id, [1, 3]))
+                            <x-nav-link :href="route('persetujuan.index')" :active="request()->routeIs('persetujuan.*')">
+                                {{ __('Persetujuan') }}
+                            </x-nav-link>
 
-                        <x-nav-link :href="route('penerimaan.index')" :active="request()->routeIs('penerimaan.*')">
-                            {{ __('Penerimaan') }}
-                        </x-nav-link>
-
-                        <x-nav-link :href="route('penyaluran.index')" :active="request()->routeIs('penyaluran.*')">
-                            {{ __('Penyaluran') }}
-                        </x-nav-link>
-                    @endif
-
-                    {{-- Menu KHUSUS SUPER ADMIN & PIMPINAN (1, 3) --}}
-                    @if(in_array(auth()->user()->role_id, [1, 3]))
-                        <x-nav-link :href="route('persetujuan.index')" :active="request()->routeIs('persetujuan.*')">
-                            {{ __('Persetujuan') }}
-                        </x-nav-link>
-
-                        <x-nav-link :href="route('laporan.index')" :active="request()->routeIs('laporan.*')">
-                            {{ __('Laporan') }}
-                        </x-nav-link>
-                    @endif
+                            <x-nav-link :href="route('laporan.index')" :active="request()->routeIs('laporan.*')">
+                                {{ __('Laporan') }}
+                            </x-nav-link>
+                        @endif
+                    @endauth
                 </div>
             </div>
 
@@ -109,45 +111,47 @@
         </div>
     </div>
 
-    <!-- Responsive Navigation Menu -->
+    <!-- Responsive Navigation Menu (Mobile) -->
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
         <div class="pt-2 pb-3 space-y-1">
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
 
-            @if(in_array(auth()->user()->role_id, [1, 2, 3]))
-                <x-responsive-nav-link :href="route('muzakki.index')" :active="request()->routeIs('muzakki.*')">
-                    {{ __('Muzakki') }}
-                </x-responsive-nav-link>
-                <x-responsive-nav-link :href="route('mustahik.index')" :active="request()->routeIs('mustahik.*')">
-                    {{ __('Mustahik') }}
-                </x-responsive-nav-link>
-                <x-responsive-nav-link :href="route('program.index')" :active="request()->routeIs('program.*')">
-                    {{ __('Program') }}
-                </x-responsive-nav-link>
-                <x-responsive-nav-link :href="route('penerimaan.index')" :active="request()->routeIs('penerimaan.*')">
-                    {{ __('Penerimaan') }}
-                </x-responsive-nav-link>
-                <x-responsive-nav-link :href="route('penyaluran.index')" :active="request()->routeIs('penyaluran.*')">
-                    {{ __('Penyaluran') }}
-                </x-responsive-nav-link>
-            @endif
+            @auth
+                @if(in_array(auth()->user()->role_id, [1, 2, 3]))
+                    <x-responsive-nav-link :href="route('muzakki.index')" :active="request()->routeIs('muzakki.*')">
+                        {{ __('Muzakki') }}
+                    </x-responsive-nav-link>
+                    <x-responsive-nav-link :href="route('mustahik.index')" :active="request()->routeIs('mustahik.*')">
+                        {{ __('Mustahik') }}
+                    </x-responsive-nav-link>
+                    <x-responsive-nav-link :href="route('program.index')" :active="request()->routeIs('program.*')">
+                        {{ __('Program') }}
+                    </x-responsive-nav-link>
+                    <x-responsive-nav-link :href="route('penerimaan.index')" :active="request()->routeIs('penerimaan.*')">
+                        {{ __('Penerimaan') }}
+                    </x-responsive-nav-link>
+                    <x-responsive-nav-link :href="route('penyaluran.index')" :active="request()->routeIs('penyaluran.*')">
+                        {{ __('Penyaluran') }}
+                    </x-responsive-nav-link>
+                @endif
 
-            @if(auth()->user()->role_id == 1)
-                <x-responsive-nav-link :href="route('amil.index')" :active="request()->routeIs('amil.*')">
-                    {{ __('Amil') }}
-                </x-responsive-nav-link>
-            @endif
+                @if(auth()->user()->role_id == 1)
+                    <x-responsive-nav-link :href="route('amil.index')" :active="request()->routeIs('amil.*')">
+                        {{ __('Amil') }}
+                    </x-responsive-nav-link>
+                @endif
 
-            @if(in_array(auth()->user()->role_id, [1, 3]))
-                <x-responsive-nav-link :href="route('persetujuan.index')" :active="request()->routeIs('persetujuan.*')">
-                    {{ __('Persetujuan') }}
-                </x-responsive-nav-link>
-                <x-responsive-nav-link :href="route('laporan.index')" :active="request()->routeIs('laporan.*')">
-                    {{ __('Laporan') }}
-                </x-responsive-nav-link>
-            @endif
+                @if(in_array(auth()->user()->role_id, [1, 3]))
+                    <x-responsive-nav-link :href="route('persetujuan.index')" :active="request()->routeIs('persetujuan.*')">
+                        {{ __('Persetujuan') }}
+                    </x-responsive-nav-link>
+                    <x-responsive-nav-link :href="route('laporan.index')" :active="request()->routeIs('laporan.*')">
+                        {{ __('Laporan') }}
+                    </x-responsive-nav-link>
+                @endif
+            @endauth
         </div>
 
         <!-- Responsive Settings Options -->
